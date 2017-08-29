@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.spyhunter99</groupId>
     <artifactId>ShortCutHelper</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>8.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
      <name>Shortcut Helper</name>
     <description>A fork of Netbeans installer module, useful for building a custom installer</description>
