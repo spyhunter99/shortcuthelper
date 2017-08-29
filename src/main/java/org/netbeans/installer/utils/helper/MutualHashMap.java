@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,89 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+
+/**
+ * @noinspection ALL
+ */
+//todo: not tested yet so use arefully
+public class MutualHashMap<F, S> implements MutualMap<F, S> {
+
+  private Map<F, S> map = new HashMap<F, S>();
+  private Map<S, F> reversedMap = new HashMap<S, F>();
+
+  public int size() {
+    return map.size();
+  }
+
+  public boolean isEmpty() {
+    return map.isEmpty();
+  }
+
+  public boolean containsKey(Object key) {
+    return map.containsKey(key);
+  }
+
+  public boolean containsValue(Object value) {
+    return map.containsValue(value);
+  }
+
+  public S get(Object key) {
+    return map.get(key);
+  }
+
+  public F reversedGet(S object) {
+    return reversedMap.get(object);
+  }
+
+  public S put(F key, S value) {
+    reversedMap.put(value, key);
+    return map.put(key, value);
+  }
+
+  public S remove(Object key) {
+    final S removed = map.remove(key);
+    reversedMap.remove(removed);
+    return removed;
+  }
+
+  public F reversedRemove(Object value) {
+    final F removed = reversedMap.remove(value);
+    map.remove(removed);
+    return removed;
+  }
+
+  public void putAll(Map<? extends F, ? extends S> m) {
+    map.putAll(m);
+    for (Map.Entry<? extends F, ? extends S> entry : m.entrySet()) {
+      reversedMap.put(entry.getValue(), entry.getKey());
+    }
+  }
+
+  public void clear() {
+    map.clear();
+    reversedMap.clear();
+  }
+
+  public Set<F> keySet() {
+    return map.keySet();
+  }
+
+  public Collection<S> values() {
+    return map.values();
+  }
+
+  public Set<Entry<F, S>> entrySet() {
+    return map.entrySet();
+  }
+
+  public Set<Entry<S, F>> reversedEntrySet() {
+    return reversedMap.entrySet();
+  }
+}

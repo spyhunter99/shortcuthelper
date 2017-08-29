@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,42 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public class Context {
+    private Set<Object> objects;
+    
+    public Context() {
+        objects = new HashSet<Object>();
+    }
+    
+    public Context(Context context) {
+        this();
+        
+        for (Object object: context.objects) {
+            objects.add(object);
+        }
+    }
+    
+    public synchronized void put(Object object) {
+        objects.add(object);
+    }
+    
+    public synchronized Object get(Class<?> clazz) {
+        for (Object object: objects) {
+            if (clazz.isAssignableFrom((Class<?>) object.getClass())) {
+                return object;
+            }
+        }
+        
+        return null;
+    }
+}

@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,37 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#ifndef _Errors_H
+#define	_Errors_H
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+    
+#define ERROR_OK                            0
+#define ERROR_INTEGRITY                     1000
+#define ERROR_FREESPACE                     1001
+#define ERROR_INPUTOUPUT                    1002
+#define ERROR_JVM_UNCOMPATIBLE              1003
+#define ERROR_JVM_NOT_FOUND                 1004
+#define ERROR_ON_EXECUTE_PROCESS            1005
+#define ERROR_PROCESS_TIMEOUT               1006
+#define ERROR_USER_TERMINATED               1007
+#define EXTERNAL_RESOURCE_MISSING           1008
+#define ERROR_BUNDLED_JVM_EXTRACTION        1009
+#define ERROR_BUNDLED_JVM_VERIFICATION      1010
+    
+#define EXIT_CODE_EVENTS_INITIALIZATION_ERROR 1022
+#define EXIT_CODE_GUI_INITIALIZATION_ERROR  1023
+#define EXIT_CODE_STUB                      1024
+#define EXIT_CODE_SYSTEM_ERROR              1025
+
+
+#ifdef	__cplusplus
+}
+#endif
+
+#endif	/* _Errors_H */
+

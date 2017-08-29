@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,51 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.wizard.containers;
+
+import org.netbeans.installer.wizard.ui.WizardUi;
+
+/**
+ * This interface represents the container for the UI of a {@link WizardComponent}.
+ * Each {@link Wizard} "owns" an instance of this class and uses it to initialize 
+ * the UI of its active component.
+ * 
+ * @author Kirill Sorokin
+ * @since 1.0
+ */
+public interface WizardContainer {
+    /**
+     * Shows or hides the container. The behavior of this method is 
+     * component-specific. A frame would probably map this method directly, while
+     * a console-mode container could draw itself or clear the screen.
+     * 
+     * @param visible Whether to show the container - <code>true</code>, or hide 
+     * it - <code>false</code>.
+     */
+    void setVisible(final boolean visible);
+    
+    /**
+     * Updates the container with a new UI. This method is usually called by the 
+     * wizard when the active component changes - the wizard wants to display its 
+     * UI.
+     * 
+     * @param ui UI which needs to be shown.
+     */
+    void updateWizardUi(final WizardUi ui);
+    
+    /**
+     * Opens(creates) the container. This method is usually called by the wizard upon 
+     * container initialization
+     *      
+     */
+    void open();    
+    
+    /**
+     * Closes(destroyes) the container. This method is usually called by the wizard upon 
+     * container closing
+     *      
+     */
+    void close();
+    
+}

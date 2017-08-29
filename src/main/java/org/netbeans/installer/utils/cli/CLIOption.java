@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -62,7 +23,7 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * Contributor(s):
  * 
  * The Original Software is NetBeans. The Initial Developer of the Original Software
- * is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+ * is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun Microsystems, Inc. All
  * Rights Reserved.
  * 
  * If you wish your version of this file to be governed by only the CDDL or only the
@@ -75,3 +36,53 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.cli;
+
+import org.netbeans.installer.utils.LogManager;
+import org.netbeans.installer.utils.StringUtils;
+import org.netbeans.installer.utils.exceptions.CLIOptionException;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public abstract class CLIOption {
+
+    protected static final String PARSING_ARGUMENT_STRING =
+            "parsing command line parameter \"{0}\"";//NOI18N
+    protected static final String UNARY_ARG_VALUE =
+            Boolean.toString(true); // NOI18N
+
+    public void init() {
+        LogManager.logIndent(StringUtils.format(
+                PARSING_ARGUMENT_STRING, getName())); // NOI18N
+    }
+    public boolean canExecute(String arg) {
+        return getName().equalsIgnoreCase(arg);
+    }
+    public void finish() {
+        LogManager.unindent(); // NOI18N
+    }
+
+    public void validateOptions(CLIArgumentsList arguments) throws CLIOptionException {
+        validateArgumentsNumber(arguments);
+    }
+
+    private void validateArgumentsNumber(CLIArgumentsList arguments) throws CLIOptionException {
+        final int number = getNumberOfArguments();
+        if (number != 0 && (number + arguments.getIndex()) >= arguments.length()) {
+            throw new CLIOptionException(getLackOfArgumentsMessage());
+        }
+    }
+
+    protected String getLackOfArgumentsMessage() {
+        return null;
+    }
+
+    protected abstract int getNumberOfArguments();
+
+    public abstract String getName();
+
+    public abstract void execute(CLIArgumentsList arguments) throws CLIOptionException;
+}

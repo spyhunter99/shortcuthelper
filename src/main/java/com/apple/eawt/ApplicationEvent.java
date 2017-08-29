@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,33 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+/* this is stub code written based on Apple EAWT package javadoc published at
+ * http://developer.apple.com.  It makes compiling code which uses Apple EAWT
+ * on non-Mac platforms possible.  The compiled stub classes should never be
+ * included in the final product.
+ */
+
+package com.apple.eawt;
+
+import java.io.Serializable;
+import java.util.EventObject;
+
+public class ApplicationEvent extends EventObject implements Serializable {
+    public ApplicationEvent(final Object source) {
+        super(source);
+    }
+    
+    public String getFilename() {
+        return null;
+    }
+    
+    public boolean isHandled() {
+        return false;
+    }
+    
+    public void setHandled(final boolean state) {
+        // does nothing
+    }
+}
+

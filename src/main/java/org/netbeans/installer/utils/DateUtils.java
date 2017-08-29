@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,39 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public final class DateUtils {
+    /////////////////////////////////////////////////////////////////////////////////
+    // Static
+    public static String getTimestamp() {
+        return COMPACT_TIMESTAMP.format(new Date());
+    }
+    
+    public static String getFormattedTimestamp() {
+        return DETAILED_TIMESTAMP.format(new Date());
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // Instance
+    private DateUtils() {
+        // does nothing
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // Constants
+    public static final DateFormat COMPACT_TIMESTAMP =
+            new SimpleDateFormat("yyyyMMddHHmmss"); // NOI18N
+    
+    public static final DateFormat DETAILED_TIMESTAMP =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // NOI18N
+}

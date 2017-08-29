@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,47 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper.swing;
+
+import javax.swing.JFileChooser;
+import org.netbeans.installer.utils.ResourceUtils;
+import org.netbeans.installer.utils.StringUtils;
+import org.netbeans.installer.utils.SystemUtils;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class NbiFileChooser extends JFileChooser {
+    
+    public NbiFileChooser() {
+        super();
+        String titleProp = System.getProperty(FILECHOOSER_TITLE_PROPERTY);
+        setDialogTitle((titleProp==null) ? DEFAULT_FILECHOOSER_TITLE : titleProp);
+        
+        String approveButtonProp = System.getProperty(FILECHOOSER_APPROVE_BUTTON_TEXT_PROPERTY);        
+        String approveButtonText = (approveButtonProp==null) ? 
+            DEFAULT_FILECHOOSER_APPROVE_BUTTON_TEXT : 
+            approveButtonProp;
+        
+        if ((approveButtonText != null) && !approveButtonText.equals("")) {            
+            setApproveButtonText(StringUtils.stripMnemonic(approveButtonText));
+            setApproveButtonToolTipText(StringUtils.stripMnemonic(approveButtonText));            
+            if (!SystemUtils.isMacOS()) {
+                setApproveButtonMnemonic(StringUtils.fetchMnemonic(approveButtonText));
+            }
+        }
+    }
+    public static final String DEFAULT_FILECHOOSER_TITLE =
+            ResourceUtils.getString(NbiFileChooser.class,
+            "NFC.filechooser.title"); // NOI18N    
+    public static final String DEFAULT_FILECHOOSER_APPROVE_BUTTON_TEXT =
+            ResourceUtils.getString(NbiFileChooser.class,
+            "NFC.filechooser.approve.button.text"); // NOI18N
+    
+    public static final String FILECHOOSER_TITLE_PROPERTY =
+            "filechooser.title";
+    public static final String FILECHOOSER_APPROVE_BUTTON_TEXT_PROPERTY =
+            "filechooser.approve.button";
+}

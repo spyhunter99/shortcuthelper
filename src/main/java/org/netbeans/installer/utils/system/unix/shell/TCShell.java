@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,42 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.system.unix.shell;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import org.netbeans.installer.utils.FileUtils;
+
+/**
+ *
+ * @author dlm198383
+ */
+public class TCShell extends CShell{    
+    private String [] SYSTEM_PROFILE_FILES = {
+        "tcsh.cshrc",
+        "tcsh.login",
+        "profile"
+    };
+    
+    private String [] USER_PROFILE_HOMEDIRFILES = {
+        ".tcshrc.user",
+        ".tcshrc",
+        ".cshrc.user",
+        ".cshrc",
+        ".profile",
+        ".login"        
+    };    
+    
+    public String [] getSystemShellFileNames() {
+        return SYSTEM_PROFILE_FILES;
+    }
+    
+    public String[] getUserShellFileNames() {
+        return USER_PROFILE_HOMEDIRFILES;
+    }
+    public String [] getAvailableNames() {
+        return new String [] { "tcsh"};
+    }
+}

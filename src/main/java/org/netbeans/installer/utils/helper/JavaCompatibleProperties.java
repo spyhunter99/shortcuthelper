@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,90 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class JavaCompatibleProperties {
+    private Version minVersion;
+    private Version maxVersion;
+    private String vendor;
+    private String osName;
+    private String osArch;
+    
+    public JavaCompatibleProperties() {        
+    }
+    public JavaCompatibleProperties(Version minVersion, Version maxVersion, String vendor,  String osName, String osArch) {
+        setMinVersion(minVersion);
+        setMaxVersion(maxVersion);
+        setVendor(vendor);
+        setOsName(osName);
+        setOsArch(osArch);
+    }
+    public JavaCompatibleProperties(String minVersion, String maxVersion, String vendor,  String osName, String osArch) {        
+        this(Version.getVersion(minVersion), Version.getVersion(maxVersion),vendor,osName,osArch);
+    }
+    public Version getMinVersion() {
+        return minVersion;
+    }
+    
+    public void setMinVersion(Version minVersion) {
+        this.minVersion = minVersion;
+    }
+    
+    public Version getMaxVersion() {
+        return maxVersion;
+    }
+    
+    public void setMaxVersion(Version maxVersion) {
+        this.maxVersion = maxVersion;
+    }
+    
+    public String getVendor() {
+        return vendor;
+    }
+    
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
+    
+    public String getOsName() {
+        return osName;
+    }
+    public void setOsName(String osName) {
+        this.osName = osName;
+    }
+
+    public String getOsArch() {
+        return osArch;
+    }
+
+    public void setOsArch(String osArch) {
+        this.osArch = osArch;
+    }
+    public String toString() {
+        String all = "";
+        if(minVersion!=null) {
+            all += "<min version=" + minVersion + "> ";
+        }
+        if(maxVersion!=null) {
+            all += "<max version=" + maxVersion + "> ";
+        }
+        if(vendor!=null) {
+            all += "<vendor=" + vendor + "> ";
+        }        
+        if(osArch!=null) {
+            all += "<os arch=" + osArch + "> ";
+        }
+        if(osName!=null) {
+            all += "<os name=" + osName + "> ";
+        }
+        return all.trim();
+    }
+}

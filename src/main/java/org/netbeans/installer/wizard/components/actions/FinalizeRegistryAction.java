@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,61 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.wizard.components.actions;
+
+import org.netbeans.installer.product.Registry;
+import org.netbeans.installer.utils.ErrorManager;
+import org.netbeans.installer.utils.ResourceUtils;
+import org.netbeans.installer.utils.StringUtils;
+import org.netbeans.installer.utils.exceptions.FinalizationException;
+import org.netbeans.installer.utils.progress.Progress;
+import org.netbeans.installer.wizard.components.WizardAction;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public class FinalizeRegistryAction extends WizardAction {
+    public FinalizeRegistryAction() {
+        setProperty(TITLE_PROPERTY,
+                DEFAULT_TITLE);
+        setProperty(DESCRIPTION_PROPERTY,
+                DEFAULT_DESCRIPTION);
+        setProperty(REGISTRY_FINALIZATION_FAILED_PROPERTY,
+                DEFAULT_REGISTRY_FINALIZATION_FAILED_MESSAGE);
+    }
+    
+    public void execute() {
+        try {
+            Registry.getInstance().finalizeRegistry(new Progress());
+        } catch (FinalizationException e) {
+            ErrorManager.notifyError(StringUtils.format(
+                    getProperty(REGISTRY_FINALIZATION_FAILED_PROPERTY)), e);
+        }
+    }
+    
+    public WizardActionUi getWizardUi() {
+        return null; // this action does not have a ui
+    }
+    
+    @Override
+    public boolean isCancelable() {
+        return false;
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // Constants
+    public static final String DEFAULT_TITLE = ResourceUtils.getString(
+            FinalizeRegistryAction.class,
+            "FRA.title"); // NOI18N
+    public static final String DEFAULT_DESCRIPTION = ResourceUtils.getString(
+            FinalizeRegistryAction.class,
+            "FRA.description"); // NOI18N
+    public static final String DEFAULT_REGISTRY_FINALIZATION_FAILED_MESSAGE =
+            ResourceUtils.getString(
+            FinalizeRegistryAction.class,
+            "FRA.registry.finalization.failed"); // NOI18N
+    public static final String REGISTRY_FINALIZATION_FAILED_PROPERTY =
+            "registry.finalization.failed"; // NOI18N
+}

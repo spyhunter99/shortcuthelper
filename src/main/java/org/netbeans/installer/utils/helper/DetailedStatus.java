@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,54 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+import org.netbeans.installer.utils.ResourceUtils;
+
+public enum DetailedStatus {
+    INSTALLED_SUCCESSFULLY,
+    INSTALLED_WITH_WARNINGS,
+    FAILED_TO_INSTALL,
+    UNINSTALLED_SUCCESSFULLY,
+    UNINSTALLED_WITH_WARNINGS,
+    FAILED_TO_UNINSTALL;
+    
+    public String toString() {
+        switch (this) {
+            case INSTALLED_SUCCESSFULLY:
+                return INSTALLED_SUCCESSFULLY_STRING;
+            case INSTALLED_WITH_WARNINGS:
+                return INSTALLED_WITH_WARNINGS_STRING;
+            case FAILED_TO_INSTALL:
+                return FAILED_TO_INSTALL_STRING;
+            case UNINSTALLED_SUCCESSFULLY:
+                return UNINSTALLED_SUCCESSFULLY_STRING;
+            case UNINSTALLED_WITH_WARNINGS:
+                return UNINSTALLED_WITH_WARNINGS_STRING;
+            case FAILED_TO_UNINSTALL:
+                return FAILED_TO_UNINSTALL_STRING;
+            default:
+                return null;
+        }
+    }
+    private static final String INSTALLED_SUCCESSFULLY_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.install.succes");//NOI18N
+private static final String INSTALLED_WITH_WARNINGS_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.install.warning");//NOI18N
+private static final String FAILED_TO_INSTALL_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.install.error");//NOI18N
+
+private static final String UNINSTALLED_SUCCESSFULLY_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.uninstall.success");//NOI18N
+private static final String UNINSTALLED_WITH_WARNINGS_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.uninstall.warning");//NOI18N
+private static final String FAILED_TO_UNINSTALL_STRING = 
+            ResourceUtils.getString(DetailedStatus.class,
+            "DetailedStatus.uninstall.error");//NOI18N
+}

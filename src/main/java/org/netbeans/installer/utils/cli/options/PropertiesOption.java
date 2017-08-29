@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -62,7 +23,7 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * Contributor(s):
  * 
  * The Original Software is NetBeans. The Initial Developer of the Original Software
- * is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+ * is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun Microsystems, Inc. All
  * Rights Reserved.
  * 
  * If you wish your version of this file to be governed by only the CDDL or only the
@@ -75,3 +36,61 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.cli.options;
+
+import org.netbeans.installer.utils.cli.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import org.netbeans.installer.utils.LogManager;
+import org.netbeans.installer.utils.ResourceUtils;
+import org.netbeans.installer.utils.exceptions.CLIOptionException;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class PropertiesOption extends CLIOptionOneArgument {
+
+    @Override
+    public void execute(CLIArgumentsList arguments) throws CLIOptionException {
+        final File propertiesFile = new File(arguments.next());
+        InputStream is = null;
+        try {
+            is = new FileInputStream(propertiesFile);
+            Properties props = new Properties();
+            props.load(is);
+            System.getProperties().putAll(props);
+        } catch (IOException e) {
+            LogManager.log(e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    LogManager.log(e);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected String getLackOfArgumentsMessage() {
+        return ResourceUtils.getString(
+                PropertiesOption.class,
+                WARNING_BAD_PROPERTIES_ARG_KEY,
+                PROPERTIES_ARG);
+    }
+
+    public String getName() {
+        return PROPERTIES_ARG;
+    }
+    public static final String PROPERTIES_ARG = 
+            "--properties";// NOI18N
+    private static final String WARNING_BAD_PROPERTIES_ARG_KEY =
+            "O.warning.bad.properties.arg"; // NOI18N
+}

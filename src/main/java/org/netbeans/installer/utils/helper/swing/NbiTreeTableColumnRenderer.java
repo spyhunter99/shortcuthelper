@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,75 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper.swing;
+
+import java.awt.Component;
+import java.awt.Graphics;
+import javax.swing.JTable;
+import javax.swing.JTree; 
+import javax.swing.table.TableCellRenderer;
+import org.netbeans.installer.utils.LogManager;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public class NbiTreeTableColumnRenderer extends JTree implements TableCellRenderer {
+    private NbiTreeTable treeTable;
+    
+    private int visibleRow = 0;
+    
+    private NbiTreeTableColumnCellRenderer cellRenderer;
+    
+    public NbiTreeTableColumnRenderer(final NbiTreeTable treeTable) {
+        this.treeTable = treeTable;
+        
+        setModel(treeTable.getModel().getTreeModel());
+        
+        setRootVisible(false);
+        setShowsRootHandles(true);
+        
+        setTreeColumnCellRenderer(new NbiTreeTableColumnCellRenderer(treeTable));
+        
+        setRowHeight(treeTable.getRowHeight());
+    }
+    
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
+        visibleRow = row;
+        
+        if (selected) {
+            setOpaque(true);
+            setBackground(treeTable.getSelectionBackground());
+            setForeground(treeTable.getSelectionForeground());
+        } else {
+            setOpaque(false);
+            setBackground(treeTable.getBackground());
+            setForeground(treeTable.getForeground());
+        }
+        
+        return this;
+    }
+    
+    public void setBounds(int x, int y, int w, int h) {
+        if (treeTable != null) {
+            super.setBounds(x, 0, w, treeTable.getHeight());
+        } else {
+            super.setBounds(x, y, w, h);
+        }
+    }
+    
+    public void paint(Graphics g) {
+        g.translate(0, -visibleRow * getRowHeight());
+        super.paint(g);
+    }
+    
+    public NbiTreeTableColumnCellRenderer getTreeColumnCellRenderer() {
+        return cellRenderer;
+    }
+    
+    public void setTreeColumnCellRenderer(final NbiTreeTableColumnCellRenderer renderer) {
+        cellRenderer = renderer;
+        setCellRenderer(renderer);
+    }
+}

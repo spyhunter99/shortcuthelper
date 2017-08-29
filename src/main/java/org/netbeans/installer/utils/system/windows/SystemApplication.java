@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,77 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.system.windows;
+
+import java.io.File;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class SystemApplication {
+    private String location;
+    private String friendlyName;
+    private String command;
+    private Boolean useByDefault;
+    private boolean addOpenWithList;
+    
+    public SystemApplication(String location) {
+        this.location = location;
+    }
+    public SystemApplication(File file) {
+        this((file!=null) ? file.getPath() : null);
+    }
+    protected SystemApplication(SystemApplication sapp) {
+        location=sapp.location;
+        friendlyName=sapp.friendlyName;
+        command = sapp.command;
+        useByDefault = sapp.isUseByDefault();
+        addOpenWithList = sapp.isAddOpenWithList();
+    }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String appLocation) {
+        this.location = appLocation;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
+    }
+
+    public void setFriendlyName(String appFriendlyName) {
+        this.friendlyName = appFriendlyName;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+    /**
+     * @param useByDefault If it is <code>true</code>, then the current app would be set as default.<br>
+     * If it is <code>false</code>, then the current app would not be set as default.<br>
+     * If it is <code>null</code>, then the current app would be set as default only if there is no default app set for the particular extension yet.
+     */
+    public void setByDefault(Boolean useByDefault) {
+        this.useByDefault = useByDefault;
+    }
+    
+    public void setOpenWithList(boolean addOpenWithList) {
+        this.addOpenWithList = addOpenWithList;
+    }
+
+    public Boolean isUseByDefault() {
+        return useByDefault;
+    }
+
+    public boolean isAddOpenWithList() {
+        return addOpenWithList;
+    }
+    
+}

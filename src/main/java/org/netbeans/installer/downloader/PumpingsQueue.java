@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,51 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.downloader;
+
+import java.io.File;
+import java.net.URL;
+
+/**
+ * This interface - entry point for clients.
+ * It's allow to client create new pumping and monitoring hole pumping process
+ * 
+ * @author Danila_Dugurov
+ */
+public interface PumpingsQueue {
+
+    /**
+     * In synchronious mode listener will be notified
+     * about any updates in pumping process.
+     * So the implementation of listeners must be worktime short.
+     */
+    void addListener(DownloadListener listener);
+
+    /**
+     * Terminate downloading process. Delete all pumpings.
+     * If downloading process was runnig start it again.
+     */
+    void reset();
+
+    Pumping getById(String id);
+
+    /**
+     * return all pumpings in queue.
+     */
+    Pumping[] toArray();
+
+    /**
+     * add new pumping. Output file in default folder
+     */
+    Pumping add(URL url);
+
+    /**
+     * add new pumping. Output file in specified folder
+     */
+    Pumping add(URL url, File folder);
+
+    Pumping delete(String id);
+
+    void delete(URL url);
+}

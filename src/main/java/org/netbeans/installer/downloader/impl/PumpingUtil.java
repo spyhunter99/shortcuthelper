@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,44 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.downloader.impl;
+import java.io.File;
+
+/**
+ *
+ * @author Danila_Dugurov
+ */
+
+public class PumpingUtil {
+  
+  
+  /////////////////////////////////////////////////////////////////////////////////
+  // Static
+  // however may be synchronization by dir more local but now I'm not sure that here
+  //object that represent dir will be the same when anoth thread need the same dir
+  
+   public static synchronized File getFileNameFromURL(File dir, String urlPath) {
+      String fileName;
+      if (urlPath.endsWith("/")) fileName = "index.html";
+      else if (urlPath.lastIndexOf('/') == -1) fileName = urlPath;
+      else fileName = urlPath.substring(urlPath.lastIndexOf('/'));
+     // fileName = fileName.split("[#?]")[0];
+      File file = new File(dir, fileName);
+      int index = 2;
+      int dotPosition = fileName.lastIndexOf('.');
+      while (file.exists()) {
+         final String insert = "." + index;
+         String newName;
+         if (dotPosition == -1) newName = fileName + insert;
+         else {
+            final String preffix = fileName.substring(0, dotPosition);
+            final String suffix = fileName.substring(dotPosition);
+            newName = preffix + insert + suffix;
+         }
+         file = new File(dir, newName);
+         index++;
+      }
+      return file;
+   }
+}

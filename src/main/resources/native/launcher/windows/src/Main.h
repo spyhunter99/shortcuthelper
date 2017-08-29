@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,43 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#ifndef _Main_H
+#define	_Main_H
+
+#include <wchar.h>
+#include "Errors.h"
+
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+void addProgressPosition(LauncherProperties *props,DWORD add);
+void setProgressRange(LauncherProperties *props, int64t * size);
+void setErrorDetailString(LauncherProperties *props,const WCHAR * message);
+void setErrorTitleString(LauncherProperties *props,const WCHAR * message);
+void setButtonString(LauncherProperties *props,const WCHAR * message);
+void setProgressTitleString(LauncherProperties *props,const WCHAR * message);
+void setMainWindowTitle(LauncherProperties * props, const WCHAR * message);
+
+void showLauncherWindows(LauncherProperties *props);
+void closeLauncherWindows(LauncherProperties *props);
+void hideLauncherWindows(LauncherProperties *props);
+
+void hide(LauncherProperties *props,HWND hwnd);
+void show(LauncherProperties *props,HWND hwnd);
+
+DWORD isTerminated(LauncherProperties * props);
+
+void showErrorW(LauncherProperties *props, const char * error, const DWORD varArgsNumber, ...);
+
+void showMessageW(LauncherProperties *props,const WCHAR* message, const DWORD number, ...);
+//void showMessageA(LauncherProperties *props,const char * message, const DWORD varArgsNumber, ...);
+
+#ifdef	__cplusplus
+}
+#endif
+
+#endif	/* _Main_H */
+

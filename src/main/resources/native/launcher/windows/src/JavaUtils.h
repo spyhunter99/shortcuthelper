@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,49 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#ifndef _JavaUtils_H
+#define	_JavaUtils_H
+
+#include <windows.h>
+#include "Launcher.h"
+#include "Types.h"
+#include "Errors.h"
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
+// java.version
+// java.vm.version
+// java.vendor
+// os.name
+// os.arch
+#define TEST_JAVA_PARAMETERS 5    
+#define MAX_LEN_VALUE_NAME 16383
+
+WCHAR * getJavaResource(WCHAR * location, const WCHAR * suffix);
+
+void getJavaProperties(WCHAR * location, LauncherProperties * props, JavaProperties ** javaProps);
+
+void findSystemJava(LauncherProperties * props);
+
+JavaVersion * getJavaVersionFromString(char * string, DWORD * result);
+
+char compareJavaVersion(JavaVersion * first, JavaVersion * second);
+
+DWORD isJavaCompatible(JavaProperties *currentJava, JavaCompatible ** compatibleJava, DWORD number);
+
+void printJavaProperties(LauncherProperties * props, JavaProperties * javaProps);
+
+void freeJavaProperties(JavaProperties ** props);
+
+void installJVM(LauncherProperties * props, LauncherResource *jvm);
+
+JavaCompatible * newJavaCompatible();
+
+#ifdef	__cplusplus
+}
+#endif
+
+#endif	/* _JavaUtils_H */

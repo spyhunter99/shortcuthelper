@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,67 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.downloader.dispatcher.impl;
+
+import static java.lang.Thread.State.NEW;
+import java.util.Queue;
+import java.util.LinkedList;
+
+/**
+ * @author Danila_Dugurov
+ */
+public class WorkersPool {
+    /////////////////////////////////////////////////////////////////////////////////
+    // Instance
+    private final int capacity;
+
+    private int inUse;
+    private Queue<Worker> freeWorkers = new LinkedList<Worker>();
+
+    public WorkersPool(final int poolCapacity) {
+        this.capacity = poolCapacity;
+    }
+
+    public int capacity() {
+        return capacity;
+    }
+
+    public synchronized int remaining() {
+        return capacity - inUse;
+    }
+
+    //noblocking
+    public synchronized Worker tryAcquire() {
+        if (inUse == capacity) {
+            return null;
+        }
+        inUse++;
+        final Worker worker = freeWorkers.poll();
+        return worker != null && worker.isAlive() ? worker : new Worker();
+    }
+
+    public synchronized Worker acquire() throws InterruptedException {
+        while (true) {
+            final Worker worker = tryAcquire();
+            if (worker == null) {
+                wait();
+            } else {
+                return worker;
+            }
+        }
+    }
+
+    public synchronized void release(final Worker worker) {
+        inUse--;
+        if (worker.isAlive()) {
+            freeWorkers.offer(worker);
+        } else if (NEW == worker.getState()) {
+            freeWorkers.offer(worker);
+        }
+        notify();
+    }
+
+    public synchronized void stopWaitingWorkers() {
+    }
+}

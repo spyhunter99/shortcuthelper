@@ -1,46 +1,7 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 1997-2013 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -75,3 +36,58 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+import org.netbeans.installer.utils.ResourceUtils;
+
+public enum Status {
+    NOT_INSTALLED("not-installed"),
+    TO_BE_INSTALLED("to-be-installed"),
+    INSTALLED("installed"),
+    INSTALLED_DIFFERENT_BUILD("installed-different-build"),
+    TO_BE_UNINSTALLED("to-be-uninstalled");
+    
+    private String name;
+    
+    private Status(final String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getDisplayName() {
+        switch (this) {
+            case NOT_INSTALLED:
+                return NOT_INSTALLED_STRING;
+            case TO_BE_INSTALLED:
+                return TO_BE_INSTALLED_STRING;
+            case INSTALLED:
+                return INSTALLED_STRING;
+            case TO_BE_UNINSTALLED:
+                return TO_BE_UNINSTALLED_STRING;
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+    private static final String NOT_INSTALLED_STRING = 
+            ResourceUtils.getString(Status.class,
+            "Status.not-installed");
+    private static final String TO_BE_INSTALLED_STRING = 
+            ResourceUtils.getString(Status.class,
+            "Status.to-be-installed");
+    private static final String INSTALLED_STRING = 
+            ResourceUtils.getString(Status.class,
+            "Status.installed");
+    private static final String TO_BE_UNINSTALLED_STRING = 
+            ResourceUtils.getString(Status.class,
+            "Status.to-be-uninstalled");
+}
+

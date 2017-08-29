@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,45 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#include "RegistryUtils.h"
+#include "StringUtils.h"
+#include "SystemUtils.h"
+#include "FileUtils.h"
+
+WCHAR * getStringValue(HKEY root, WCHAR *key, WCHAR *valueName, BOOL access64key) {
+    
+    HKEY hkey = 0 ;
+    WCHAR *result = NULL;
+    DWORD  type  = 0;
+    DWORD  size  = 0;
+    byte*  value = NULL;
+    
+    if(RegOpenKeyExW(root, key, 0, KEY_READ | ((access64key && IsWow64) ? KEY_WOW64_64KEY : 0), &hkey) == ERROR_SUCCESS) {
+        
+        if (RegQueryValueExW(hkey, valueName, NULL, &type, NULL, &size) == ERROR_SUCCESS) {
+            
+            value = (byte*) LocalAlloc(LPTR,(size + 1) * sizeof(WCHAR));
+            ZERO(value, sizeof(WCHAR) * (size + 1));
+            if (RegQueryValueExW(hkey, valueName, NULL, &type, value, &size) == ERROR_SUCCESS) {
+                if(type == REG_SZ) {
+                    result = (WCHAR *)value;
+                }
+            }
+            if(result==NULL) {
+                FREE(value);
+            }            
+        }
+    }
+    
+    if(hkey!=0) {
+        RegCloseKey(hkey);
+    }
+    return result;
+}
+WCHAR * getStringValuePC(HKEY root, WCHAR *parentkey, WCHAR *childkey, WCHAR *valueName, BOOL access64key) {
+    WCHAR * key = appendStringW(appendStringW(appendStringW(NULL, parentkey), L"\\"), childkey);
+    WCHAR *value = getStringValue(root, key, valueName, access64key);
+    FREE(key);
+    return value;
+}

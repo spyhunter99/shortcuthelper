@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.spyhunter99</groupId>
+    <artifactId>ShortCutHelper</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+     <name>Shortcut Helper</name>
+    <description>A fork of Netbeans installer module, useful for building a custom installer</description>
+    <url>https://github.com/spyhunter99</url>
+    <prerequisites>
+        <maven>3.2.1</maven>
+    </prerequisites>
+
+    <properties>
+        <javadoc.extra.settings />
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <organization>
+        <name>Github</name>
+        <url>http://www.github.com/spyhunter99</url>
+    </organization>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/spyhunter99/shortcuthelper/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>TravisCI</system>
+        <url>https://travis-ci.org/spyhunter99/shortcuthelper</url>
+    </ciManagement>
+    <distributionManagement>
+        <repository>
+            <id>sonatype-release</id>
+            <layout>default</layout>
+            <name>sonatype releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-snapshot</id>
+            <layout>default</layout>
+            <name>sonatype releases</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>website</id>
+            <url>https://www.github/spyhunter99/shortcuthelper</url>
+        </site>
+    </distributionManagement>
+    <inceptionYear>2008</inceptionYear>
+
+    <developers>
+       
+		
+    </developers>
+    <contributors>
+    </contributors>
+    <licenses>
+        <license>
+            <name>GPLv2</name>
+            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>CDDL</name>
+            <url>https://opensource.org/licenses/CDDL-1.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/spyhunter99/shortcuthelper.git</connection>
+        <developerConnection>scm:git:https://github.com/spyhunter99/shortcuthelper.git</developerConnection>
+        <url>https://github.com/spyhunter99/shortcuthelper/</url>
+        <tag>shortcuthelper-1.0.0</tag>
+    </scm>
+ 
+</project>

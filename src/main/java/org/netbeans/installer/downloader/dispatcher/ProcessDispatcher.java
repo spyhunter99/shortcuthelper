@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,43 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.downloader.dispatcher;
+
+public interface ProcessDispatcher {
+    /**
+     * entry point to add process. This don't give any information when it will be 
+     * processed return false if process discarded. default impl - always true.
+     */
+    boolean schedule(Process process);
+
+    /**
+     * Force process termination. Deprecated since in any case of implementation 
+     * it will deal with thread.stop() which is deprecated
+     */
+    @Deprecated
+    void terminate(Process process);
+
+    void setLoadFactor(LoadFactor factor);
+
+    /**
+     * loadFactor allow managing system resources usages. By default Full - means 
+     * no internal managment In default impl loadFactor impact on frequency of 
+     * blank quantums.
+     */
+    LoadFactor loadFactor();
+
+    boolean isActive();
+
+    int activeCount();
+
+    int waitingCount();
+
+    void start();
+
+    /**
+     * when dispatcher stops it terminate all running processes and also clear 
+     * waiting queue.
+     */
+    void stop();
+}

@@ -1,0 +1,5 @@
+target/classes/org/netbeans/installer/utils/cli/options/SuggestUninstallOption.class
+target/
+*.user
+build.xml
+build.properties

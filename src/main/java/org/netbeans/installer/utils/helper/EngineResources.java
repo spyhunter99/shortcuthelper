@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,43 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public final class EngineResources {
+    /////////////////////////////////////////////////////////////////////////////////
+    // Instance
+    private EngineResources() {
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // Constants
+    public static final String LOCAL_ENGINE_PATH_PROPERTY = 
+            "nbi.product.local.engine.path";
+    
+    /*public static final String LOCAL_ENGINE_UNINSTALL_COMMAND_PROPERTY =
+            "nbi.product.local.engine.uninstall.command";
+    
+    public static final String LOCAL_ENGINE_MODIFY_COMMAND_PROPERTY =
+            "nbi.product.local.engine.modify.command";
+    */
+    public static final String DATA_DIRECTORY = 
+            "data";
+    
+    public static final String ENGINE_CONTENTS_LIST = 
+            DATA_DIRECTORY + "/engine.list";
+    
+    public static final String ENGINE_PROPERTIES_BUNDLE = 
+            DATA_DIRECTORY + ".engine";
+    
+    @Deprecated
+    public static final String ENGINE_PROPERTIES = 
+            DATA_DIRECTORY + "/engine.properties";
+    
+    public static final String ENGINE_PROPERTIES_PATTERN = 
+            "^" + DATA_DIRECTORY  + "/engine(_[a-zA-Z]+)*.properties$";//NOI18N
+}

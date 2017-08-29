@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,53 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#ifndef _FileUtils_H
+#define	_FileUtils_H
+
+#include <windows.h>
+#include "Errors.h"
+#include "Types.h"
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
+#define OUTPUT_LEVEL_DEBUG 0
+#define OUTPUT_LEVEL_NORMAL 1
+    
+    
+    extern const WCHAR * FILE_SEP;
+    extern const long CRC32_TABLE[256];
+    void update_crc32(DWORD * crc32, char * buf, DWORD size);
+    int64t * getFreeSpace(WCHAR *path);
+    int64t * getFileSize(WCHAR * path);
+    void checkFreeSpace(LauncherProperties * props, WCHAR * tmpDir, int64t * size);
+    WCHAR * getParentDirectory(WCHAR * dir);
+    void createDirectory(LauncherProperties * props, WCHAR * directory);
+    void createTempDirectory(LauncherProperties * props, WCHAR * argTempDir, DWORD createRndSubDir);
+    void deleteDirectory(LauncherProperties * props,WCHAR * dir);
+    WCHAR * getExePath();
+    WCHAR * getExeName();
+    WCHAR * getExeDirectory();
+    
+    WCHAR * getSystemTemporaryDirectory();    
+    DWORD isDirectory(WCHAR *path);
+    WCHAR * getCurrentDirectory();
+    WCHAR * getCurrentUserHome();
+        
+    
+    void writeMessageW(LauncherProperties * props, DWORD level,DWORD isErr,  const WCHAR * message, DWORD needEndOfLine);
+    void writeMessageA(LauncherProperties * props,DWORD level, DWORD isErr,  const char  * message, DWORD needEndOfLine);
+    void writeErrorA(LauncherProperties * props,DWORD level,   DWORD isErr,  const char  * message, const WCHAR * param, DWORD errorCode);
+    void writeDWORD(LauncherProperties * props,DWORD level,    DWORD isErr,  const char  * message, DWORD value, DWORD needEndOfLine);
+    void writeint64t(LauncherProperties * props,DWORD level,   DWORD isErr,  const char  * message, int64t * value, DWORD needEndOfLine);
+    
+    void flushHandle(HANDLE hd);
+    DWORD fileExists(WCHAR * path);
+    
+    #ifdef	__cplusplus
+}
+#endif
+
+#endif	/* _FileUtils_H */

@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,64 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper.swing;
+
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import org.netbeans.installer.utils.helper.Text;
+
+public class NbiTextDialog extends NbiDialog {
+    private NbiTextPane   textPane;
+    private NbiPanel      textPanel;
+    private NbiScrollPane textScrollPane;
+    
+    private String title;
+    private Text   text;
+    
+    public NbiTextDialog(String title, Text text) {
+        super();
+        
+        this.title = title;
+        this.text = text;
+        
+        initComponents();
+        initialize();
+    }
+    
+    public NbiTextDialog(NbiFrame owner, String title, Text text) {
+        super(owner);
+        
+        this.title = title;
+        this.text = text;
+        
+        initComponents();
+        initialize();
+    }
+    
+    private void initialize() {
+        setTitle(title);
+        
+        textPane.setText(text);
+    }
+    
+    private void initComponents() {
+        setLayout(new GridBagLayout());
+        
+        textPane = new NbiTextPane();
+        
+        textPanel = new NbiPanel();
+        textPanel.setLayout(new BorderLayout());
+        textPanel.add(textPane, BorderLayout.CENTER);
+        
+        textScrollPane = new NbiScrollPane(textPanel);
+        textScrollPane.setViewportBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+        textScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        
+        add(textScrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(11, 11, 11, 11), 0, 0));
+    }
+}

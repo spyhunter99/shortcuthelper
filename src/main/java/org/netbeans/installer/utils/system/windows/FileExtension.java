@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,78 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.system.windows;
+
+import org.netbeans.installer.utils.StringUtils;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class FileExtension {
+    private String name;
+    private String description;
+    private PerceivedType perceivedType;
+    private String mimeType;
+    private String icon;
+    public FileExtension(String extName) {
+        setName(extName);
+    }
+    
+    protected FileExtension(FileExtension fe) {
+        name = fe.name;
+        description = fe.description;
+        perceivedType = fe.perceivedType;
+        mimeType = fe.mimeType;
+        icon = fe.icon;
+    }
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+        //remove starting dots
+        if(name!=null) {
+            while(name.substring(0,1).equals(StringUtils.DOT)) {
+                name = name.substring(1);
+            }
+        }
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public PerceivedType getPerceivedType() {
+        return perceivedType;
+    }
+    
+    public void setPerceivedType(PerceivedType perceivedType) {
+        this.perceivedType = perceivedType;
+    }
+    
+    public String getMimeType() {
+        return mimeType;
+    }
+    
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+    
+    public String getIcon() {
+        return icon;
+    }
+    
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    public String getDotName() {
+        return StringUtils.DOT + getName();
+    }
+}

@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,70 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper;
+
+public final class PlatformConstants {
+    /////////////////////////////////////////////////////////////////////////////////
+    // Instance
+    private PlatformConstants() {
+        // does nothing
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // Constants
+    public static final String OS_FAMILY_WINDOWS = 
+            "windows";
+    
+    public static final String OS_FAMILY_LINUX = 
+            "linux";
+    
+    public static final String OS_FAMILY_SOLARIS = 
+            "solaris";
+    
+    public static final String OS_FAMILY_MACOSX = 
+            "macosx";
+    
+    public static final String OS_FAMILY_UNIX = 
+            "unix";
+    
+    public static final String OS_FAMILY_FREEBSD = 
+            "freebsd";
+
+    public static final String OS_FAMILY_OPENBSD = 
+            "openbsd";
+    
+    public static final String OS_FAMILY_BSD = 
+            "bsd";
+
+    public static final String OS_FAMILY_AIX =
+            "aix";
+
+    public static final String OS_FAMILY_HPUX =
+            "hpux";
+    
+    public static final String HARDWARE_X86 = 
+            "x86";
+    
+    public static final String HARDWARE_X64 = 
+            "x64";
+
+    public static final String HARDWARE_IA64 = 
+            "ia64";
+
+    //this includes PA_RISC 1.0 and 1.1
+    public static final String HARDWARE_PA_RISC = 
+            "pa_risc"; 
+    
+    public static final String HARDWARE_PA_RISC20 = 
+            "pa_risc2.0";
+    
+    public static final String HARDWARE_SPARC = 
+            "sparc";
+    
+    public static final String HARDWARE_PPC = 
+            "ppc";
+    
+    public static final String HARDWARE_PPC64 = 
+            "ppc64";
+}

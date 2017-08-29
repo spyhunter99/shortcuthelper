@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,62 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.product.dependencies;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.netbeans.installer.product.components.Product;
+import org.netbeans.installer.utils.helper.Dependency;
+import org.netbeans.installer.utils.helper.Version;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class Requirement extends Dependency {
+    public static final String NAME = "requirement"; //NOI18N
+    private List <List <Requirement>> alternatives ;
+    
+    public Requirement(
+            final String uid,
+            final Version versionLower,
+            final Version versionUpper,
+            final Version versionResolved) {
+        this(uid,versionLower,versionUpper,versionResolved,
+                new ArrayList <List <Requirement>>());
+    }
+    public Requirement(
+            final String uid,
+            final Version versionLower,
+            final Version versionUpper,
+            final Version versionResolved,
+            final List <List <Requirement>> altRequirements) {
+        super(uid,versionLower,versionUpper,versionResolved);
+        alternatives = new ArrayList <List <Requirement>> (altRequirements);
+    }
+    
+   
+    public String getName() {
+        return NAME;
+    }
+    
+    public boolean satisfies(Product product) {
+        if (getVersionResolved() != null) {
+            return product.getUid().equals(getUid()) &&
+                    product.getVersion().equals(getVersionResolved());
+            
+        }
+        
+        // if the requirement is not resolved, we check uid equality and
+        // upper/lower version compatibility
+        return product.getUid().equals(getUid()) &&
+                product.getVersion().newerOrEquals(getVersionLower()) &&
+                product.getVersion().olderOrEquals(getVersionUpper());        
+    }   
+
+    public List<List<Requirement>> getAlternatives() {
+        return alternatives;
+    }
+
+}

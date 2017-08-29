@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,37 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.product.filters;
+
+import java.util.LinkedList;
+import java.util.List;
+import org.netbeans.installer.product.components.Product;
+import org.netbeans.installer.product.RegistryNode;
+
+/**
+ *
+ * @author Kirill Sorokin
+ */
+public class SubTreeFilter implements RegistryFilter {
+    private List<RegistryNode> leaves;
+    
+    public SubTreeFilter(List<? extends RegistryNode> nodes) {
+        this.leaves = new LinkedList<RegistryNode>();
+        this.leaves.addAll(nodes);
+    }
+    
+    public boolean accept(final RegistryNode node) {
+        if (leaves.contains(node)) {
+            return true;
+        }
+        
+        for (RegistryNode leaf: leaves) {
+            if (node.isAncestor(leaf)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}

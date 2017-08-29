@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,38 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+#ifndef _Launcher_H
+#define	_Launcher_H
+
+#include <windows.h>
+#include "Errors.h"
+#include "JavaUtils.h"
+#include "Types.h"
+
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
+    extern const WCHAR * NEW_LINE;
+    
+    LauncherProperties * createLauncherProperties();
+    void freeLauncherProperties(LauncherProperties ** props);
+    
+    void printStatus(LauncherProperties * props);
+    void trySetCompatibleJava(WCHAR * location, LauncherProperties * props);
+    DWORD isSilent(LauncherProperties * props);
+    DWORD isLauncherArgument(LauncherProperties * props, WCHAR * value);
+    void processLauncher(LauncherProperties * props);
+    
+    void resolvePath(LauncherProperties * props, LauncherResource * file);
+    void resolveString(LauncherProperties * props, WCHAR ** result);
+    void resolveLauncherProperties(LauncherProperties * props, WCHAR **result);    
+    void appendCommandLineArgument( WCHAR ** command, const WCHAR * arg);
+    
+#ifdef	__cplusplus
+}
+#endif
+
+#endif	/* _Launcher_H */

@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,37 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.progress;
+
+/**
+ * The interface which needs to be implemented by classes which need to listen to
+ * a progress' state change events. 
+ * 
+ * <p>
+ * They will need to register themselves with the progress object by either 
+ * constructing the progress with a specialized constructor or calling the 
+ * {@link Progress#addProgressListener(ProgressListener)} method.
+ * 
+ * @see Progress#Progress(ProgressListener)
+ * @see Progress#addProgressListener(ProgressListener)
+ * 
+ * @author Kirill Sorokin
+ * 
+ * @since 1.0
+ */
+public interface ProgressListener {
+    /**
+     * This method will be called when a {@link Progress} being listened changes 
+     * its state.
+     * 
+     * <p>
+     * The actual {@link Progress} which has changed will be passed in as the only 
+     * parameter. A progress' state is considered changed when any of its core 
+     * properties (<code>title</code>, <code>detail</code>, <code>percentage</code>, 
+     * <code>canceled</code>) change.
+     * 
+     * @param progress The {@link Progress} whose state has changed. 
+     */
+    void progressUpdated(final Progress progress);
+}

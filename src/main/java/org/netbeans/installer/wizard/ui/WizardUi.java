@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,32 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.wizard.ui;
+
+import org.netbeans.installer.wizard.containers.SwingContainer;
+
+/**
+ * This class represents the UI of a wizard component. It is an abstraction over the
+ * set of possible UI modes for the wizard and provides factory methods which create
+ * objects representing component's UI for a concrete wizard UI mode, such as 
+ * {@link SwingUi}.
+ * 
+ * @see org.netbeans.installer.utils.helper.UiMode
+ * 
+ * @author Kirill Sorokin
+ * @since 1.0
+ */
+public interface WizardUi {
+    /**
+     * Creates an instance of {@link SwingUi} and initializes it with the specified 
+     * {@link SwingContainer} object, thus initializaing the component's UI for 
+     * {@link org.netbeans.installer.utils.helper.UiMode#SWING}.
+     * 
+     * @param container Instance of {@link SwingContainer} which will "contain" the
+     *      resulting UI.
+     * @return Instance of {@link SwingUi} which represents the component's UI for 
+     *      the swing UI mode.
+     */
+    SwingUi getSwingUi(final SwingContainer container);
+}

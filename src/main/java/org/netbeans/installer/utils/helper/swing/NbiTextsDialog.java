@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,79 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.helper.swing;
+
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.Map;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import org.netbeans.installer.utils.helper.Text;
+
+public class NbiTextsDialog extends NbiDialog {
+    private NbiTabbedPane textsTabbedPane;
+    
+    private String            title;
+    private Map<String, Text> texts;
+    
+    public NbiTextsDialog(String title, Map<String, Text> texts) {
+        super();
+        
+        this.title = title;
+        this.texts = texts;
+        
+        initComponents();
+        initialize();
+    }
+    
+    public NbiTextsDialog(NbiFrame owner, String title, Map<String, Text> texts) {
+        super(owner);
+        
+        this.title = title;
+        this.texts = texts;
+        
+        initComponents();
+        initialize();
+    }
+    
+    private void initialize() {
+        setTitle(title);
+        
+        textsTabbedPane.removeAll();
+        
+        for (String tabTitle: texts.keySet()) {
+            textsTabbedPane.addTab(tabTitle, createTab(texts.get(tabTitle)));
+        }
+    }
+    
+    private void initComponents() {
+        setLayout(new GridBagLayout());
+        
+        textsTabbedPane = new NbiTabbedPane();
+        
+        add(textsTabbedPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(11, 11, 11, 11), 0, 0));
+    }
+    
+    private JComponent createTab(Text text) {
+        NbiTextPane   textPane;
+        NbiPanel      textPanel;
+        NbiScrollPane textScrollPane;
+        
+        textPane = new NbiTextPane();
+        textPane.setText(text);
+        
+        textPanel = new NbiPanel();
+        textPanel.setLayout(new BorderLayout());
+        textPanel.add(textPane, BorderLayout.CENTER);
+        
+        textScrollPane = new NbiScrollPane(textPanel);
+        textScrollPane.setViewportBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+        textScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        
+        return textScrollPane;
+    }
+}

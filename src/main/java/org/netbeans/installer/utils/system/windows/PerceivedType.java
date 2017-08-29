@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -75,3 +36,37 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.system.windows;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public enum PerceivedType {
+    TEXT,
+    VIDEO,
+    AUDIO,
+    SYSTEM,
+    IMAGE,
+    COMPRESSED;
+    
+    public String toString() {
+        switch (this) {
+            case TEXT: 
+                return "text";              //NOI18N
+            case VIDEO: 
+                return "video";            //NOI18N
+            case AUDIO: 
+                return "audio";            //NOI18N
+            case SYSTEM:
+                return "system";          //NOI18N
+            case IMAGE: 
+                return "image";            //NOI18N
+            case COMPRESSED: 
+                return "compressed";  //NOI18N
+            default:
+                return null;            
+        }
+    }
+}

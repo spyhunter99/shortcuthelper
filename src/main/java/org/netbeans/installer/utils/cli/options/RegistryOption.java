@@ -1,42 +1,3 @@
-# shortcuthelper
-
-This repo is a clone of Netbean's Installer module, available here:
-
-`hg clone http://hg.netbeans.org/main`
-
-I then copied the path `nbi/engine` into `src/main/java`
-and then shuffled around the precompiled native libraries that are included 
-in the Netbeans repo.
-
-## Examples
-
-Create a shortcut 
-
-````
-
-import java.io.File;
-import org.netbeans.installer.utils.SystemUtils;
-import org.netbeans.installer.utils.exceptions.NativeException;
-import org.netbeans.installer.utils.system.shortcut.FileShortcut;
-import org.netbeans.installer.utils.system.shortcut.LocationType;
-import org.netbeans.installer.utils.system.shortcut.Shortcut;
-
-
-public class Main {
-
-    public static void main(String[] args) throws NativeException{
-        Shortcut sc = new FileShortcut("Shortcut title", new File("path/to/executable"));
-        SystemUtils.createShortcut(sc, LocationType.CURRENT_USER_DESKTOP);
-    }
-}
-
-````
-
-
-## License
-
-This is licensed the same as netbeans, GPLv2 OR CDDL
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -62,7 +23,7 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * Contributor(s):
  * 
  * The Original Software is NetBeans. The Initial Developer of the Original Software
- * is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+ * is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun Microsystems, Inc. All
  * Rights Reserved.
  * 
  * If you wish your version of this file to be governed by only the CDDL or only the
@@ -75,3 +36,58 @@ This is licensed the same as netbeans, GPLv2 OR CDDL
  * the option applies only if the new code is made subject to such option by the
  * copyright holder.
  */
+
+package org.netbeans.installer.utils.cli.options;
+
+import org.netbeans.installer.utils.cli.*;
+import java.util.Arrays;
+import org.netbeans.installer.product.Registry;
+import org.netbeans.installer.utils.ResourceUtils;
+import org.netbeans.installer.utils.StringUtils;
+import org.netbeans.installer.utils.exceptions.CLIOptionException;
+
+/**
+ *
+ * @author Dmitry Lipin
+ */
+public class RegistryOption extends CLIOptionOneArgument {
+
+    @Override
+    public void execute(CLIArgumentsList arguments) throws CLIOptionException {
+
+        final String value = arguments.next();
+
+        final String existing = System.getProperty(
+                Registry.REMOTE_PRODUCT_REGISTRIES_PROPERTY);
+
+        if (existing == null) {
+            System.setProperty(
+                    Registry.REMOTE_PRODUCT_REGISTRIES_PROPERTY,
+                    value);
+        } else {
+            if (!Arrays.asList(
+                    existing.split(StringUtils.LF)).contains(value)) {
+                System.setProperty(
+                        Registry.REMOTE_PRODUCT_REGISTRIES_PROPERTY,
+                        existing + StringUtils.LF + value);
+            }
+        }
+
+    }
+
+    @Override
+    protected String getLackOfArgumentsMessage() {
+        return ResourceUtils.getString(
+                RecordOption.class,
+                WARNING_BAD_REGISTRY_ARG_KEY,
+                REGISTRY_ARG);
+    }
+
+    public String getName() {
+        return REGISTRY_ARG;
+    }
+    public static final String REGISTRY_ARG = 
+            "--registry";// NOI18N
+    private static final String WARNING_BAD_REGISTRY_ARG_KEY =
+            "O.warning.bad.registry.arg"; // NOI18N
+}
