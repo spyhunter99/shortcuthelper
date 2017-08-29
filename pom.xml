@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.spyhunter99</groupId>
     <artifactId>ShortCutHelper</artifactId>
-    <version>8.2.1-SNAPSHOT</version>
+    <version>8.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
      <name>Shortcut Helper</name>
     <description>A fork of Netbeans installer module, useful for building a custom installer</description>
@@ -54,7 +54,14 @@
     <inceptionYear>2008</inceptionYear>
 
     <developers>
-       
+        <developer>
+            <id>netbeans</id>
+            <name>netbeans contributors</name>
+            <roles>
+                <role>developers</role>
+            </roles>
+            <email>nbdev@netbeans.org</email>
+        </developer>
 		
     </developers>
     <contributors>
