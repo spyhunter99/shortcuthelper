@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.spyhunter99</groupId>
     <artifactId>ShortCutHelper</artifactId>
-    <version>8.2.0</version>
+    <version>8.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
      <name>Shortcut Helper</name>
     <description>A fork of Netbeans installer module, useful for building a custom installer</description>
@@ -76,7 +76,7 @@
         <connection>scm:git:https://github.com/spyhunter99/shortcuthelper.git</connection>
         <developerConnection>scm:git:https://github.com/spyhunter99/shortcuthelper.git</developerConnection>
         <url>https://github.com/spyhunter99/shortcuthelper/</url>
-        <tag>installcert-8.2.0</tag>
+        <tag>shortcuthelper-1.0.0</tag>
     </scm>
  
  <build>
