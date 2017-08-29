@@ -10,6 +10,12 @@ in the Netbeans repo.
 
 ## Examples
 
+Include your pom
+
+groupId : 'com.github.spyhuner99'
+artifactId: 'ShortCutHelper`
+version: '8.2.0'
+
 Create a shortcut 
 
 ````
