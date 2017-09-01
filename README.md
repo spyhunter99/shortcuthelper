@@ -1,4 +1,4 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.spyhuner99/ShortCutHelper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.spyhuner99/ShortCutHelper)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.spyhunter99/ShortCutHelper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.spyhunter99/ShortCutHelper)
 
 # shortcuthelper
 
@@ -14,7 +14,7 @@ in the Netbeans repo.
 
 Include your pom
 
-groupId : 'com.github.spyhuner99'
+groupId : 'com.github.spyhunter99'
 artifactId: 'ShortCutHelper`
 version: '8.2.0'
 
