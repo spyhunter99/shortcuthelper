@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.spyhuner99/ShortCutHelper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.spyhuner99/ShortCutHelper)
+
 # shortcuthelper
 
 This repo is a clone of Netbean's Installer module, available here:
